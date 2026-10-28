@@ -3,6 +3,7 @@ import 'package:flutter_earth_globe/flutter_earth_globe_controller.dart';
 import 'package:flutter_earth_globe/globe_coordinates.dart';
 import 'package:flutter_earth_globe/point.dart';
 import 'package:globe_app/screens/earth_cloud_screen.dart';
+import 'package:globe_app/screens/earth_color.dart';
 import 'package:globe_app/screens/earth_day_screen.dart';
 import 'package:globe_app/screens/earth_night_screen.dart';
 import 'package:globe_app/screens/moon_screen.dart';
@@ -18,6 +19,7 @@ class GlobeScreen extends StatefulWidget {
 class _GlobeScreenState extends State<GlobeScreen> {
   final PageController _pageController = PageController();
   late FlutterEarthGlobeController _earthDayController;
+  late FlutterEarthGlobeController _earthColorController;
   late FlutterEarthGlobeController _earthNightController;
   late FlutterEarthGlobeController _earthCloudController;
   late FlutterEarthGlobeController _moonController;
@@ -41,6 +43,13 @@ class _GlobeScreenState extends State<GlobeScreen> {
       lightIntensity: 2,
       background: Image.asset(_bgImagePath).image,
       surface: Image.asset("assets/8k_earth-day.jpg").image,
+    );
+    _earthColorController = FlutterEarthGlobeController(
+      rotationSpeed: 0.05,
+      isBackgroundFollowingSphereRotation: true,
+      lightIntensity: 2,
+      background: Image.asset(_bgImagePath).image,
+      surface: Image.asset("assets/earth_color.jpg").image,
     );
     _earthNightController = FlutterEarthGlobeController(
       rotationSpeed: 0.05,
@@ -105,6 +114,7 @@ class _GlobeScreenState extends State<GlobeScreen> {
   void dispose() {
     _pageController.dispose();
     _earthDayController.dispose();
+    _earthColorController.dispose();
     _earthNightController.dispose();
     _earthCloudController.dispose();
     _sunController.dispose();
@@ -123,6 +133,7 @@ class _GlobeScreenState extends State<GlobeScreen> {
           onPageChanged: (value) => setState(() => _pageIndex = value),
           children: [
             EarthDayScreen(controller: _earthDayController),
+            EarthColorScreen(controller: _earthColorController),
             EarthNightScreen(controller: _earthNightController),
             EarthCloudScreen(controller: _earthCloudController),
             SunScreen(controller: _sunController),
@@ -133,66 +144,80 @@ class _GlobeScreenState extends State<GlobeScreen> {
           color: Colors.black87,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           height: 80,
-          child: Row(
-            mainAxisAlignment: .spaceBetween,
-            crossAxisAlignment: .center,
-            children: [
-              buildBottomSheetItems(
-                text: "Earth\nDay",
-                isSelected: _pageIndex == 0,
-                onTap: () {
-                  _pageController.animateToPage(
-                    0,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  );
-                },
-              ),
-              buildBottomSheetItems(
-                text: "Earth\nNight",
-                isSelected: _pageIndex == 1,
-                onTap: () {
-                  _pageController.animateToPage(
-                    1,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  );
-                },
-              ),
-              buildBottomSheetItems(
-                text: "Earth\nCloud",
-                isSelected: _pageIndex == 2,
-                onTap: () {
-                  _pageController.animateToPage(
-                    2,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  );
-                },
-              ),
-              buildBottomSheetItems(
-                text: "Sun",
-                isSelected: _pageIndex == 3,
-                onTap: () {
-                  _pageController.animateToPage(
-                    3,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  );
-                },
-              ),
-              buildBottomSheetItems(
-                text: "Moon",
-                isSelected: _pageIndex == 4,
-                onTap: () {
-                  _pageController.animateToPage(
-                    4,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  );
-                },
-              ),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: .spaceBetween,
+              crossAxisAlignment: .center,
+              children: [
+                buildBottomSheetItems(
+                  text: "Earth\nDay",
+                  isSelected: _pageIndex == 0,
+                  onTap: () {
+                    _pageController.animateToPage(
+                      0,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    );
+                  },
+                ),
+                buildBottomSheetItems(
+                  text: "Earth\nColor",
+                  isSelected: _pageIndex == 1,
+                  onTap: () {
+                    _pageController.animateToPage(
+                      1,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    );
+                  },
+                ),
+                buildBottomSheetItems(
+                  text: "Earth\nNight",
+                  isSelected: _pageIndex == 2,
+                  onTap: () {
+                    _pageController.animateToPage(
+                      2,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    );
+                  },
+                ),
+                buildBottomSheetItems(
+                  text: "Earth\nCloud",
+                  isSelected: _pageIndex == 3,
+                  onTap: () {
+                    _pageController.animateToPage(
+                      3,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    );
+                  },
+                ),
+                buildBottomSheetItems(
+                  text: "Sun",
+                  isSelected: _pageIndex == 4,
+                  onTap: () {
+                    _pageController.animateToPage(
+                      4,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    );
+                  },
+                ),
+                buildBottomSheetItems(
+                  text: "Moon",
+                  isSelected: _pageIndex == 5,
+                  onTap: () {
+                    _pageController.animateToPage(
+                      5,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
